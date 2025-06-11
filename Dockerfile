@@ -24,9 +24,10 @@ RUN python -m compileall -q searx
 # Set environment variables
 ENV SEARXNG_SETTINGS_PATH=/app/searx/settings.yml
 ENV PYTHONPATH=/app
+ENV PORT=8080
 
 # Expose port
-EXPOSE 8080
+EXPOSE $PORT
 
-# Start command
-CMD ["uwsgi", "--http-socket", "0.0.0.0:8080", "--module", "searx.webapp", "--callable", "app", "--workers", "2", "--threads", "2", "--master", "--die-on-term"] 
+# Start command - use Railway's PORT environment variable
+CMD uwsgi --http-socket 0.0.0.0:$PORT --module searx.webapp --callable app --workers 2 --threads 2 --master --die-on-term 
