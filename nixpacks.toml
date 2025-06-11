@@ -1,11 +1,15 @@
 [providers]
-python = "3.11"
+providers = ["python"]
+
+[variables]
+PYTHONPATH = "/app"
 
 [phases.setup]
-nixPkgs = ["python311", "python311Packages.pip"]
+nixPkgs = ["python311", "python311Packages.pip", "python311Packages.setuptools"]
 
 [phases.install]
 cmds = [
+  "pip install --upgrade pip",
   "pip install -r requirements.txt",
   "pip install uwsgi"
 ]
@@ -16,4 +20,4 @@ cmds = [
 ]
 
 [start]
-cmd = "uwsgi --http-socket 0.0.0.0:$PORT --module searx.webapp --callable app --workers 4 --threads 2" 
+cmd = "uwsgi --http-socket 0.0.0.0:$PORT --module searx.webapp --callable app --workers 2 --threads 2 --master --die-on-term" 
